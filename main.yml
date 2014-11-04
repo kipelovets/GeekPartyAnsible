@@ -1,0 +1,94 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: ensure server software installed
+      apt: name={{ item }} state=installed
+      with_items: [ nginx, php5-cli, php5-fpm, php5-curl, php5-mysql, mysql-server, mysql-client, git, python-mysqldb, phpmyadmin ]
+
+    - name: make backups dir writeable
+      file: dest=/var/backups mode=0777
+
+    - name: install nginx base config
+      copy: src=geekparty_common.conf dest=/etc/nginx/geekparty_common.conf
+
+    - name: install nginx config for geekparty.ru
+      copy: src={{ item  }}.conf dest=/etc/nginx/sites-enabled/{{ item }}.conf
+      with_items: [ geekparty, geekpartysu, logs, phpmyadmin ]
+
+    - name: install phpmyadmin config
+      copy: src={{ item }} dest=/etc/phpmyadmin/{{ item }}
+      with_items: [ config.inc.php, config-db.php ]
+
+    - name: remove default nginx config
+      file: dest=/etc/nginx/sites-enabled/default state=absent
+
+    - name: copy mysql config
+      copy: src=my.cnf dest=/etc/mysql/my.cnf
+
+    # backup
+    - name: copy mysql backup script
+      copy: src=mysql_backup.sh dest=/usr/bin/mysql_backup.sh mode=0755
+    - name: mysql backup cron
+      cron: hour=0 minute=0 name="geekparty backup" state=present job="/usr/bin/mysql_backup.sh"
+
+    # mysql
+    - name: ensure mysql started
+      service: name=mysql state=started
+    - name: ensure DB exists
+      mysql_db: name={{item}} state=present login_user=root login_password=k3p7j1h7ZpRC
+      with_items: [ geekparty, geekpartysu ]
+    - name: ensure user exists
+      mysql_user: name=slave_user password=po6ahS0s state=present login_user=root login_password=k3p7j1h7ZpRC
+      with_items: [ geekparty, geekpartysu ]
+
+    # site code
+    - name: ensure geekparty dir exists
+      file: dest=/var/www/{{ item }} state=directory
+      with_items: [ geekparty, geekpartysu ]
+
+    - name: checkout code from github - master
+      git: dest=/var/www/geekparty/ repo=https://github.com/GeekPartyTeam/GeekParty-Site.git
+
+    - name: checkout code from github - develop
+      git: dest=/var/www/geekpartysu/ repo=https://github.com/GeekPartyTeam/GeekParty-Site.git version=develop
+
+    - name: copy parameters.yml
+      copy: src=parameters_{{item}}.yml dest=/var/www/{{item}}/app/config/parameters.yml
+      with_items: [ geekparty, geekpartysu ]
+
+    - name: install composer
+      get_url: url=https://getcomposer.org/composer.phar dest=/usr/bin/composer mode=0755
+
+    - name: fix rights
+      file: dest={{ item }} owner=www-data group=www-data recurse=yes
+      with_items: 
+        - /var/www/geekparty
+        - /var/www/geekpartysu
+
+    - name: update composer deps
+      shell: /usr/bin/composer install chdir={{item}}
+      sudo: true
+      sudo_user: www-data
+      with_items: 
+        - /var/www/geekparty
+        - /var/www/geekpartysu
+
+    - name: clear app cache
+      shell: app/console --env={{item[0]}} c:c chdir=/var/www/{{item[1]}}
+      sudo: true
+      sudo_user: www-data
+      with_nested: 
+          - [ prod, dev ]
+          - [ geekparty, geekpartysu ]
+
+    - name: restart services
+      service: name={{ item }} state=restarted
+      with_items: [ nginx, php5-fpm ]
+
+# - name: update DB schema
+#   shell: app/console doctrine:schema:update --force
+#   sudo: true
+#   sudo_user: www-data
+#   args:
+#     chdir: /var/www/geekparty
