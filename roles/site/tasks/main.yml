@@ -1,0 +1,14 @@
+- name: ensure geekparty dir exists
+  file: dest={{ code_dir }} state=directory
+
+- name: checkout code from github
+  git: dest=/var/www/geekparty/ repo={{ git_repo }}
+
+- name: copy parameters.yml
+  template: src=parameters.yml dest={{ code_dir }}/app/config/parameters.yml
+
+- name: install composer
+  get_url: url=https://getcomposer.org/composer.phar dest=/usr/bin/composer mode=0755
+
+- include: cc.yml
+  tags: [ clear-cache ]

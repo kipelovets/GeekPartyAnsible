@@ -1,0 +1,3 @@
+code_dir: /var/www/geekparty
+branch: master
+git_repo: https://github.com/GeekPartyTeam/GeekParty-Site.git

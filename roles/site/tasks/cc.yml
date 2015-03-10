@@ -1,0 +1,19 @@
+- name: fix rights
+  file: dest={{ code_dir }} owner=www-data group=www-data recurse=yes
+
+- name: update composer deps
+  shell: /usr/bin/composer install chdir={{ code_dir }}
+  sudo: true
+  sudo_user: www-data
+
+- name: clear app cache
+  shell: app/console --env={{ item }} c:c chdir={{ code_dir }}
+  sudo: true
+  sudo_user: www-data
+  with_items: 
+    - [ prod, dev ]
+
+- name: restart services
+  service: name={{ item }} state=restarted
+  with_items: [ nginx, php5-fpm ]
+

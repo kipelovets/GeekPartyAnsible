@@ -2,9 +2,9 @@ parameters:
     database_driver: pdo_mysql
     database_host: localhost
     database_port: null
-    database_name: geekpartysu
-    database_user: root
-    database_password: k3p7j1h7ZpRC
+    database_name: {{ mysql_db }}
+    database_user: {{ mysql_db_user }}
+    database_password: {{ mysql_db_password }}
     mailer_transport: smtp
     mailer_host: 127.0.0.1
     mailer_user: null
@@ -14,7 +14,7 @@ parameters:
     database_path: null
     fb_app_id: 452612894814235
     fb_secret: 63301f66bf97c5de5766cbbbbc8eaa34
-    branch: develop
+    branch: {{ branch }}
     vk_app_id: 3561840
     vk_app_secret: g71CdozgcG6vZudTzLcN
     disqus_shortname: geekparty

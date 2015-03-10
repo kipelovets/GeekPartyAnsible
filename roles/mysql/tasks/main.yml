@@ -1,0 +1,24 @@
+- name: install mysql
+  apt: name={{ item }} state=installed
+  with_items: [ mysql-server, mysql-client ]
+
+  # mysql
+- name: copy mysql config
+  copy: src=etc/mysql/my.cnf dest=/etc/mysql/my.cnf
+
+- name: ensure mysql started
+  service: name=mysql state=started
+
+- name: ensure mysql DB exists
+  mysql_db: name={{item}} state=present login_user={{ mysql_db_user }} login_password={{ mysql_db_password }}
+  with_items: [ geekparty, geekpartysu ]
+
+  # backup
+- name: make backups dir writeable
+  file: dest={{ backup_dir }} mode=0777
+
+- name: copy mysql dump script
+  template: src=mysql_dump.sh dest=/usr/bin/mysql_dump.sh mode=0755
+
+- name: install mysql dump cron
+  cron: hour=0 minute=0 name="geekparty mysql db dump" state=present job="/usr/bin/mysql_dump.sh"
