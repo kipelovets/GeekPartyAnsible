@@ -1,0 +1,14 @@
+- name: add user for keereal
+  user: name=keereal password="{{ keereal_password }}"
+
+- name: mkdir public inside home dir
+  file: path=/home/keereal/public state=directory owner=keereal group=keereal
+
+- name: create symlink inside /var/www
+  file: path=/var/www/keereal src=/home/keereal/public state=link
+
+- name: add nginx config
+  copy: src=keereal.conf dest=/etc/nginx/sites-enabled/keereal.conf
+
+- name: reload nginx
+  service: name=nginx state=reloaded

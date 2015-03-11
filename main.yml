@@ -17,6 +17,9 @@
     - role: backup
       tags: [ backup ]
 
+    - role: keereal
+      tags: [ keereal ]
+
   tasks:
     - name: ensure server software installed
       apt: name={{ item }} state=installed
