@@ -4,7 +4,7 @@
 
   # mysql
 - name: copy mysql config
-  copy: src=etc/mysql/my.cnf dest=/etc/mysql/my.cnf
+  copy: src=my.cnf dest=/etc/mysql/my.cnf 
 
 - name: ensure mysql started
   service: name=mysql state=started
@@ -15,10 +15,10 @@
 
   # backup
 - name: make backups dir writeable
-  file: dest={{ backup_dir }} mode=0777
+  file: dest={{ backup_dir }} state=directory mode=0700
 
 - name: copy mysql dump script
-  template: src=mysql_dump.sh dest=/usr/bin/mysql_dump.sh mode=0755
+  template: src=mysql_dump.sh dest=/usr/bin/mysql_dump.sh mode=0700
 
 - name: install mysql dump cron
   cron: hour=0 minute=0 name="geekparty mysql db dump" state=present job="/usr/bin/mysql_dump.sh"
