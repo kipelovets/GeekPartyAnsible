@@ -1,0 +1,8 @@
+- name: ensure iptables-persistent are installed
+  apt: name=iptables-persistent state=present
+
+- name: copy iptables
+  copy: src=rules.v4 dest=/etc/iptables/rules.v4
+
+- name: apply iptables
+  shell: iptables-restore < /etc/iptables/rules.v4
