@@ -3,22 +3,28 @@
   gather_facts: no
   roles: 
     - role: mysql
+      tags: [ mysql ]
 
     - role: site
       code_dir: /var/www/geekparty
       branch: master
       mysql_db: geekparty
+      tags: [ site, geekpartyru ]
 
     - role: site
       code_dir: /var/www/geekpartysu
       branch: develop
       mysql_db: geekpartysu
+      tags: [ site, geekpartysu ]
 
     - role: backup
       tags: [ backup ]
 
     - role: keereal
       tags: [ keereal ]
+
+    - role: iptables
+      tags: [ iptables ]
 
   tasks:
     - name: ensure server software installed
