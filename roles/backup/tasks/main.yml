@@ -12,4 +12,4 @@
   template: src=s3cfg dest=/root/.s3cfg
 
 - name: install cron uploading files to s3
-  cron: hour=0 minute=0 name="upload projects to s3" job="s3cmd sync {{ backup_dir }}/ s3://geekparty/"
+  cron: hour=0 minute=5 name="upload projects to s3" job="s3cmd sync {{ backup_dir }}/ s3://geekparty/"
