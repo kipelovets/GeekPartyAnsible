@@ -1,0 +1,19 @@
+- name: install golang
+  apt: name=golang state=installed
+
+- name: clone gohub
+  git: dest=/usr/lib/gohub repo=https://github.com/kipelovets/gohub.git
+
+- name: compile
+  shell: go build -o /usr/bin/gohub main.go logstream.go
+  args:
+    chdir: /usr/lib/gohub
+
+- name: copy gohub.conf
+  template: src=gohub.json dest=/etc/gohub.json
+
+- name: copy upstart job
+  template: src=gohub.conf dest=/etc/init/gohub.conf
+
+- name: copy upstart job
+  shell: start gohub
