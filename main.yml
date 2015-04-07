@@ -9,12 +9,24 @@
       code_dir: /var/www/geekparty
       branch: master
       mysql_db: geekparty
-      tags: [ site, geekpartyru ]
+      domain: gamedevparty.ru
+      fb_app_id: "{{ master.fb_app_id }}"
+      fb_secret: "{{ master.fb_secret }}"
+      admin_email: "{{ master.admin_email }}"
+      vk_app_id: "{{ master.vk_app_id }}"
+      vk_app_secret: "{{ master.vk_app_secret }}"
+      tags: [ site, gamedevparty ]
 
     - role: site
       code_dir: /var/www/geekpartysu
       branch: develop
       mysql_db: geekpartysu
+      domain: geekparty.su
+      fb_app_id: "{{ develop.fb_app_id }}"
+      fb_secret: "{{ develop.fb_secret }}"
+      admin_email: "{{ develop.admin_email }}"
+      vk_app_id: "{{ develop.vk_app_id }}"
+      vk_app_secret: "{{ develop.vk_app_secret }}"
       tags: [ site, geekpartysu ]
 
     - role: backup
@@ -25,6 +37,9 @@
 
     - role: iptables
       tags: [ iptables ]
+
+    - role: gohub
+      tags: [ gohub ]
 
   tasks:
     - name: ensure server software installed
