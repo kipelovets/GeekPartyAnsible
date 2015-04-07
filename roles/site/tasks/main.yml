@@ -1,14 +1,24 @@
+- name: install nginx config
+  template: src=nginx_site.conf dest=/etc/nginx/sites-enabled/{{ domain }}.conf
+
 - name: ensure geekparty dir exists
-  file: dest={{ code_dir }} state=directory
+  file: dest={{ item }} state=directory recurse=yes
+  with_items:
+    - "{{ code_dir }}"
+    - "/var/data/{{ domain }}/works"
+    - "/var/data/{{ domain }}/images"
 
-- name: checkout code from github
-  git: dest=/var/www/geekparty/ repo={{ git_repo }}
-
-- name: copy parameters.yml
-  template: src=parameters.yml dest={{ code_dir }}/app/config/parameters.yml
+- name: install parameters.yml
+  template: src=parameters.yml dest={{ code_dir }}/parameters.yml
 
 - name: install composer
   get_url: url=https://getcomposer.org/composer.phar dest=/usr/bin/composer mode=0755
+
+- name: install deploy script
+  template: src=deploy.sh dest={{ code_dir }}/deploy.sh mode="u+x"
+
+- name: deploy
+  shell: '{{ code_dir }}/deploy.sh GeekPartyTeam/GeekParty-Site "" {{ branch }} "" "manual"'
 
 - include: cc.yml
   tags: [ clear-cache ]

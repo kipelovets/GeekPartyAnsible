@@ -12,9 +12,10 @@ parameters:
     locale: en
     secret: a9bdc1fa017cc448df70cef2357e22d7782b87ca
     database_path: null
-    fb_app_id: 452612894814235
-    fb_secret: 63301f66bf97c5de5766cbbbbc8eaa34
+    fb_app_id: {{ fb_app_id }}
+    fb_secret: {{ fb_secret }}
     branch: {{ branch }}
-    vk_app_id: 3561840
-    vk_app_secret: g71CdozgcG6vZudTzLcN
+    vk_app_id: {{ vk_app_id }}
+    vk_app_secret: {{ vk_app_secret }}
     disqus_shortname: geekparty
+    admin_email: {{ admin_email }}
