@@ -1,5 +1,6 @@
 - name: install nginx config
   template: src=nginx_site.conf dest=/etc/nginx/sites-enabled/{{ domain }}.conf
+  notify: [ nginx-reload ]
 
 - name: ensure geekparty dir exists
   file: dest={{ item }} state=directory recurse=yes
@@ -7,6 +8,7 @@
     - "{{ code_dir }}"
     - "/var/data/{{ domain }}/works"
     - "/var/data/{{ domain }}/images"
+    - "/var/log/{{ domain }}"
 
 - name: install parameters.yml
   template: src=parameters.yml dest={{ code_dir }}/parameters.yml
@@ -18,7 +20,17 @@
   template: src=deploy.sh dest={{ code_dir }}/deploy.sh mode="u+x"
 
 - name: deploy
-  shell: '{{ code_dir }}/deploy.sh GeekPartyTeam/GeekParty-Site "" {{ branch }} "" "manual"'
+  shell: '{{ code_dir }}/deploy.sh GeekPartyTeam/GeekParty-Site "" "{{ branch }}" "" "manual"'
 
 - include: cc.yml
   tags: [ clear-cache ]
+
+- name: warmup symfony class cache
+  shell: php boot.php
+  args:
+    chdir: "{{ code_dir }}/current"
+
+- name: remove boot.php
+  file: dest={{ code_dir }}/current/boot.php state=absent
+
+- meta: flush_handlers
