@@ -16,4 +16,4 @@
   template: src=gohub.conf dest=/etc/init/gohub.conf
 
 - name: copy upstart job
-  shell: start gohub
+  shell: restart gohub

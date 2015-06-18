@@ -3,12 +3,12 @@
         {
           "Repo":"GeekPartyTeam/GeekParty-Site",
           "Branch":"develop",
-          "Shell":"/var/www/geekparty/deploy.sh"
+          "Shell":"/var/www/geekparty.su/deploy.sh"
         },
         {
           "Repo":"GeekPartyTeam/GeekParty-Site",
           "Branch":"master",
-          "Shell":"/var/www/geekpartysu/deploy.sh"
+          "Shell":"/var/www/gamedevparty.ru/deploy.sh"
         }
     ]
 }
