@@ -8,12 +8,12 @@
 {% endfor %}
 -A INPUT -i lo -j ACCEPT
 -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
--A INPUT -p tcp -m tcp --dport 22 -j ACCEPT   # ssh
--A INPUT -p tcp -m tcp --dport 80 -j ACCEPT   # sites
--A INPUT -p tcp -m tcp --dport 7654 -j ACCEPT # gohub
--A INPUT -p tcp -m tcp --dport 8080 -j ACCEPT # phpmyadmin
--A INPUT -p tcp -m tcp --dport 8081 -j ACCEPT # logs
--A INPUT -p tcp -m tcp --dport 8082 -j ACCEPT # keereal
+-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT   
+-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT   
+-A INPUT -p tcp -m tcp --dport 7654 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 8080 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 8081 -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 8082 -j ACCEPT 
 -A INPUT -j DROP
 -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
 COMMIT
