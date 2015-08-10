@@ -20,7 +20,7 @@
   template: src=deploy.sh dest={{ code_dir }}/deploy.sh mode="u+x"
 
 - name: deploy
-  shell: '{{ code_dir }}/deploy.sh GeekPartyTeam/GeekParty-Site "" "{{ branch }}" "" "manual"'
+  shell: '{{ code_dir }}/deploy.sh'
 
 - include: cc.yml
   tags: [ clear-cache ]

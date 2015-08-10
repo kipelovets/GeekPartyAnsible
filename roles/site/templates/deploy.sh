@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -x
 
 (
 flock -x -w 10 200 || exit 1
@@ -10,16 +11,15 @@ WORKS_DIR="/var/data/{{ domain }}/works"
 IMAGES_DIR="/var/data/{{ domain }}/images"
 LOGS_DIR="/var/log/{{ domain }}"
 
-if [ "$#" -ne 5 ]; then
-    echo "Usage: deploy.sh <git repo> <project> <branch> <type> <commit>"
-    exit 1
-gi 
+REPO="{{ repo_name }}" 
+BRANCH="{{ branch }}"
 
-REPO=$1
-#PROJECT=$2
-BRANCH=$3
-#TYPE=$4
-COMMIT=$5
+if [ "$#" -ne 5 ]; then
+echo "Usage: deploy.sh <repo> <branch> <commit>"
+COMMIT="manual"
+else
+COMMIT=$3
+fi 
 
 URL="https://github.com/$REPO"
 
@@ -30,21 +30,21 @@ git clone -b $BRANCH $URL $TARGET_DIR
 LOGS_DIR_LINK="$TARGET_DIR/app/logs"
 rm -rf "$TARGET_DIR/.git" $LOGS_DIR_LINK
 
-ln -s $WORKS_DIR "$TARGET_DIR/public_html/works" 
-ln -s $IMAGES_DIR "$TARGET_DIR/public_html/images" 
-ln -s "$DIR/parameters.yml" "$TARGET_DIR/app/config/parameters.yml"
-ln -s $LOGS_DIR $LOGS_DIR_LINK
+ln -sfn $WORKS_DIR "$TARGET_DIR/public_html/works"
+ln -sfn $IMAGES_DIR "$TARGET_DIR/public_html/images"
+ln -sfn "$DIR/parameters.yml" "$TARGET_DIR/app/config/parameters.yml"
+ln -sfn $LOGS_DIR $LOGS_DIR_LINK
 
 cd $TARGET_DIR
 export HOME=/root
-/usr/bin/composer install -o
-app/console cache:warmup
-app/console assetic:dump --env=prod --no-debug
+/usr/bin/composer install -o --no-dev --ansi
+app/console cache:warmup --env=prod
 app/console assets:install --symlink public_html
+app/console assetic:dump --env=prod --no-debug public_html
 
-chown -R www-data:www-data $LOGS_DIR_LINK
+chown -RH www-data:www-data $LOGS_DIR_LINK
 chown -R www-data:www-data app/cache
 
-ln -sf "$TARGET_DIR" "$DIR/current" 
+ln -sfn "$TARGET_DIR" "$DIR/current"
 
 ) 200>/var/lock/{{ domain }}.lock
