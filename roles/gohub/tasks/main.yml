@@ -15,5 +15,6 @@
 - name: copy upstart job
   template: src=gohub.conf dest=/etc/init/gohub.conf
 
-- name: copy upstart job
-  shell: restart gohub
+- name: start gohub service
+  shell: start gohub
+  ignore_errors: yes

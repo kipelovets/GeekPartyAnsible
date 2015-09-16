@@ -3,7 +3,7 @@
   with_items: [ python-dateutil ]
 
 - name: clone s3cmd from git
-  git: repo=git@github.com:s3tools/s3cmd.git dest=/usr/s3cmd version=v1.5.2
+  git: repo=https://github.com/s3tools/s3cmd.git dest=/usr/s3cmd version=v1.5.2 accept_hostkey=yes
 
 - name: link s3cmd bin
   file: path=/usr/bin/s3cmd src=/usr/s3cmd/s3cmd state=link

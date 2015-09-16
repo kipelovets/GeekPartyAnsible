@@ -1,3 +1,7 @@
+- name: ensure server software installed
+  apt: name={{ item }} state=installed
+  with_items: [ php5-cli, php5-fpm, php5-curl, php5-mysql, git ]
+
 - name: install nginx config
   template: src=nginx_site.conf dest=/etc/nginx/sites-enabled/{{ domain }}.conf
   notify: [ nginx-reload ]
@@ -21,16 +25,28 @@
 
 - name: deploy
   shell: '{{ code_dir }}/deploy.sh'
+  tags: [ deploy ]
 
 - include: cc.yml
-  tags: [ clear-cache ]
+  tags: [ clear-cache, deploy ]
 
 - name: warmup symfony class cache
   shell: php boot.php
   args:
     chdir: "{{ code_dir }}/current"
+  tags: [ deploy ]
 
 - name: remove boot.php
   file: dest={{ code_dir }}/current/boot.php state=absent
+  tags: [ deploy ]
+
+- name: create db schema
+  become: yes
+  become_user: www-data
+  command: app/console doctrine:schema:create
+  args:
+    chdir: "{{ code_dir }}/current"
+  ignore_errors: yes
+  tags: [ deploy ]
 
 - meta: flush_handlers

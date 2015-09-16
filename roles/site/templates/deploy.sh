@@ -24,10 +24,11 @@ fi
 URL="https://github.com/$REPO"
 
 DATE=`date +"%FT%T"`
-TARGET_DIR="$DIR/$DATE-$COMMIT"
+TARGET_DIR="$DIR/version-$DATE-$COMMIT"
 
 git clone -b $BRANCH $URL $TARGET_DIR
 LOGS_DIR_LINK="$TARGET_DIR/app/logs"
+CACHE_DIR_LINK="$TARGET_DIR/app/cache"
 rm -rf "$TARGET_DIR/.git" $LOGS_DIR_LINK
 
 ln -sfn $WORKS_DIR "$TARGET_DIR/public_html/works"
@@ -43,8 +44,11 @@ app/console assets:install --symlink public_html
 app/console assetic:dump --env=prod --no-debug public_html
 
 chown -RH www-data:www-data $LOGS_DIR_LINK
-chown -R www-data:www-data app/cache
+chown -RH www-data:www-data $CACHE_DIR_LINK
 
 ln -sfn "$TARGET_DIR" "$DIR/current"
+
+cd ..
+ls -td version* | tail -n +4 | xargs rm -rf --
 
 ) 200>/var/lock/{{ domain }}.lock

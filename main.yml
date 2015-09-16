@@ -6,6 +6,9 @@
     - role: mysql
       tags: [ mysql ]
 
+    - role: nginx
+      tags: [ nginx ]
+
     - role: site
       code_dir: /var/www/gamedevparty.ru
       branch: master
@@ -41,28 +44,3 @@
 
     - role: gohub
       tags: [ gohub ]
-
-  tasks:
-    - name: ensure server software installed
-      apt: name={{ item }} state=installed
-      with_items: [ nginx, php5-cli, php5-fpm, php5-curl, php5-mysql, git, python-mysqldb, phpmyadmin ]
-
-    # nginx
-    - name: remove default nginx config
-      file: dest=/etc/nginx/sites-enabled/default state=absent
-
-    - name: install nginx configs
-      copy: src=etc/nginx/{{ item  }}.conf dest=/etc/nginx/{{ item }}.conf
-      with_items: 
-          - geekparty_common
-          - sites-enabled/geekparty
-          - sites-enabled/geekpartysu
-          - sites-enabled/logs
-          - sites-enabled/phpmyadmin
-
-    # phpmyadmin
-    - name: install phpmyadmin config
-      copy: src={{ item }} dest=/etc/phpmyadmin/{{ item }}
-      with_items: 
-          - config.inc.php
-          - config-db.php

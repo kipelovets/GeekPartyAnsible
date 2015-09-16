@@ -1,10 +1,29 @@
 - name: install mysql
-  apt: name={{ item }} state=installed
-  with_items: [ mysql-server, mysql-client ]
+  apt: name={{ item }} state=installed update_cache=yes cache_valid_time=3600
+  with_items: [ mysql-server, mysql-client, python-pip, python-mysqldb ]
 
-  # mysql
 - name: copy mysql config
-  copy: src=my.cnf dest=/etc/mysql/my.cnf 
+  copy: src=my.cnf dest=/etc/mysql/my.cnf
+
+- name: copy mysql init root password file
+  template: src=mysql-init dest=/tmp/mysql-init owner=mysql group=mysql
+
+- name: stop mysql
+  service: name=mysql state=stopped
+
+- name: reset mysql password
+  become: yes
+  become_user: mysql
+  shell: /usr/bin/mysqld_safe --init-file=/tmp/mysql-init &
+
+- name: wait for mysql to start
+  wait_for: path=/var/run/mysqld/mysqld.pid
+
+- name: stop mysqld_safe
+  shell: kill `cat /var/run/mysqld/mysqld.pid`
+
+- name: remove mysql-init
+  file: path=/tmp/mysql-init state=absent
 
 - name: ensure mysql started
   service: name=mysql state=started
