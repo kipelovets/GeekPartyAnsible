@@ -1,0 +1,6 @@
+- name: ensure server software installed
+  apt: name={{ item }} state=installed
+  with_items: [ php5-cli, php5-fpm, php5-curl, php5-imagick, php5-mysql, git ]
+
+- name: upload php.ini
+  file: src=php.ini dest=/etc/php5/fpm/php.ini

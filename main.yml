@@ -9,6 +9,9 @@
     - role: nginx
       tags: [ nginx ]
 
+    - role: php
+      tags: [ php ]
+
     - role: site
       code_dir: /var/www/gamedevparty.ru
       branch: master
