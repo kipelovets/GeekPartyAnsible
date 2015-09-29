@@ -40,8 +40,9 @@ cd $TARGET_DIR
 export HOME=/root
 /usr/bin/composer install -o --no-dev --ansi
 app/console cache:warmup --env=prod
-app/console assets:install --symlink public_html
+app/console assets:install --env=prod --symlink public_html
 app/console assetic:dump --env=prod --no-debug public_html
+app/console doctrine:migrations:migrate --env=prod
 
 chown -RH www-data:www-data $LOGS_DIR_LINK
 chown -RH www-data:www-data $CACHE_DIR_LINK
