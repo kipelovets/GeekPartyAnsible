@@ -19,3 +19,4 @@ parameters:
     vk_app_secret: {{ vk_app_secret }}
     disqus_shortname: geekparty
     admin_email: {{ admin_email }}
+    fake_login_enabled: false
