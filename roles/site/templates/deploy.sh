@@ -38,7 +38,7 @@ ln -sfn $LOGS_DIR $LOGS_DIR_LINK
 
 cd $TARGET_DIR
 export HOME=/root
-/usr/bin/composer install -o --no-dev --ansi
+/usr/bin/composer install -o --no-dev --ansi -n
 app/console cache:warmup --env=prod
 app/console assets:install --env=prod --symlink public_html
 app/console assetic:dump --env=prod --no-debug public_html
