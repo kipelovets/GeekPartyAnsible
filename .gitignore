@@ -1,2 +1,3 @@
 group_vars/all
+host_vars/*
 .idea
