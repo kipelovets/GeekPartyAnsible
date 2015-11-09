@@ -1,0 +1,30 @@
+app:
+    build: app
+    tty: true
+db:
+    image: mysql
+    #build: db
+    ports:
+        - 3306:3306
+    environment:
+        MYSQL_ROOT_PASSWORD: secret
+#        MYSQL_DATABASE: geekparty
+#        MYSQL_USER: root
+#        MYSQL_PASSWORD: root
+php:
+    build: php
+    expose:
+        - 9000:9000
+    volumes_from:
+        - app
+    links:
+        - db
+        - app
+nginx:
+    build: nginx
+    ports:
+        - 80:80
+    links:
+        - php
+    volumes_from:
+        - app
