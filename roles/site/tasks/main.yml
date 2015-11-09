@@ -18,6 +18,7 @@
 
 - name: install deploy script
   template: src=deploy.sh dest={{ code_dir }}/deploy.sh mode="u+x"
+  tags: [ site-deploy-script ]
 
 - name: deploy
   shell: '{{ code_dir }}/deploy.sh'
