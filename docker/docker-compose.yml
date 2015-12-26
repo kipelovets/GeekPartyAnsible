@@ -1,16 +1,17 @@
 app:
-    build: app
+    image: busybox
+    entrypoint: /bin/sh
+    volumes:
+        - ./data:/var/data
+        - ./data/nginx-sites/gamedevparty.conf:/etc/nginx/sites-enabled/gamedevparty.conf
     tty: true
 db:
     image: mysql
-    #build: db
-    ports:
+    expose:
         - 3306:3306
     environment:
         MYSQL_ROOT_PASSWORD: secret
-#        MYSQL_DATABASE: geekparty
-#        MYSQL_USER: root
-#        MYSQL_PASSWORD: root
+
 php:
     build: php
     expose:
@@ -28,3 +29,12 @@ nginx:
         - php
     volumes_from:
         - app
+
+gohub:
+    build: gohub
+    volumes:
+        - ./data:/var/data
+    ports:
+        - 7654
+    environment:
+        VIRTUAL_HOST: gohub.docker

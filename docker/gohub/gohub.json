@@ -1,0 +1,9 @@
+{
+    "Hooks":[
+        {
+          "Repo":"GeekPartyTeam/GeekParty-Site",
+          "Branch":"master",
+          "Shell":"/usr/bin/deploy.sh"
+        }
+    ]
+}
