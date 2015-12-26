@@ -1,0 +1,22 @@
+parameters:
+    database_driver: pdo_mysql
+    database_host: DB_PORT_3306_TCP_ADDR
+    database_port: 3306
+    database_name: MYSQL_DATABASE
+    database_user: MYSQL_USER
+    database_password: MYSQL_PASSWORD
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: en
+    secret: a9bdc1fa017cc448df70cef2357e22d7782b87ca
+    database_path: null
+    fb_app_id: FB_APP_ID
+    fb_secret: FB_SECRET
+    branch: BRANCH
+    vk_app_id: VK_APP_ID
+    vk_app_secret: VK_APP_SECRET
+    disqus_shortname: geekparty
+    admin_email: ADMIN_EMAIL
+    fake_login_enabled: false
