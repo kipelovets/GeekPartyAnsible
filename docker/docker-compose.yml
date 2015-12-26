@@ -3,38 +3,60 @@ app:
     entrypoint: /bin/sh
     volumes:
         - ./data:/var/data
-        - ./data/nginx-sites/gamedevparty.conf:/etc/nginx/sites-enabled/gamedevparty.conf
     tty: true
+
 db:
     image: mysql
     expose:
-        - 3306:3306
-    environment:
-        MYSQL_ROOT_PASSWORD: secret
+        - 3306
+    env_file:
+        - vars.env
 
 php:
     build: php
     expose:
-        - 9000:9000
+        - 9000
     volumes_from:
         - app
     links:
         - db
-        - app
+    env_file:
+        - vars.env
+
 nginx:
-    build: nginx
+    image: nginx
     ports:
-        - 80:80
+        - 80
     links:
         - php
-    volumes_from:
-        - app
+    volumes:
+        - ./data:/var/data
+        - ./data/gamedevparty.conf:/etc/nginx/conf.d/default.conf
+    environment:
+        VIRTUAL_HOST: gamedevparty.docker
 
 gohub:
     build: gohub
     volumes:
         - ./data:/var/data
+        - ./data/composer-cache:/root/.composer
+        - ./data/gohub.json:/etc/gohub.json
+        - ./data/deploy.sh:/usr/bin/deploy.sh
     ports:
         - 7654
+    links:
+        - db
     environment:
         VIRTUAL_HOST: gohub.docker
+    env_file:
+        - vars.env
+
+templater:
+    image: busybox
+    links:
+        - db
+    volumes:
+        - ./data:/var/data
+    command: sh /var/data/tpl.sh
+    env_file:
+        - vars.env
