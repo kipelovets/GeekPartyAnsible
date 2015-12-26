@@ -1,9 +1,9 @@
-FROM debian:jessie
+FROM golang
 
-RUN apt-get install -y docker.io
+RUN apt-get update && apt-get install -y git php5-cli php5-mysql
 
-ADD gohub /usr/bin/gohub
-ADD gohub.json /etc/gohub.json
-ADD deploy.sh /usr/bin/deploy.sh
+RUN git clone https://github.com/kipelovets/gohub.git /gohub
+RUN cd /gohub && go build -v && cp gohub /usr/bin/gohub
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
-CMD /usr/bin/gohub --log=/var/log/gohub.log --port=7654 --config=/etc/gohub.json
+CMD /usr/bin/gohub --log=- --port=7654 --config=/etc/gohub.json
