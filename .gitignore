@@ -1,3 +1,7 @@
 group_vars/all
 host_vars/*
 .idea
+docker/data/code
+docker/data/parameters.yml
+docker/vars.env
+docker/data/composer-cache
