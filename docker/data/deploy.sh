@@ -36,7 +36,7 @@ rm -rf "$TARGET_DIR/.git" $LOGS_DIR_LINK
 
 ln -sfn $WORKS_DIR "$TARGET_DIR/public_html/works"
 ln -sfn $IMAGES_DIR "$TARGET_DIR/public_html/images"
-ln -sfn "$DIR/parameters.yml" "$TARGET_DIR/app/config/parameters.yml"
+cp "$DIR/parameters.yml" "$TARGET_DIR/app/config/parameters.yml"
 ln -sfn $LOGS_DIR $LOGS_DIR_LINK
 
 cd $TARGET_DIR
