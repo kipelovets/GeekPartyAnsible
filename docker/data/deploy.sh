@@ -5,13 +5,14 @@ set -x
 
 DOMAIN="gamedevparty.ru" #{{ domain }}
 
-(
-flock -x -w 10 200 || exit 1
-
 DIR="/var/data/code" #"{{ code_dir }}"
 WORKS_DIR="/var/data/$DOMAIN/works"
 IMAGES_DIR="/var/data/$DOMAIN/images"
 LOGS_DIR="/var/log/$DOMAIN"
+
+if [ ! -d "$LOGS_DIR" ]; then
+    mkdir "$LOGS_DIR"
+fi
 
 REPO="GeekPartyTeam/GeekParty-Site" #"{{ repo_name }}"
 BRANCH="master" #"{{ branch }}"
@@ -53,5 +54,3 @@ ln -sfn "$TARGET_DIR" "$DIR/current"
 
 cd ..
 ls -td version* | tail -n +4 | xargs rm -rf --
-
-) 200>"/var/lock/$DOMAIN.lock"
