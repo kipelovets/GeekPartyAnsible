@@ -8,7 +8,7 @@ DOMAIN="gamedevparty.ru" #{{ domain }}
 DIR="/var/data/code" #"{{ code_dir }}"
 WORKS_DIR="/var/data/$DOMAIN/works"
 IMAGES_DIR="/var/data/$DOMAIN/images"
-LOGS_DIR="/var/log/$DOMAIN"
+LOGS_DIR="/var/data/logs"
 
 if [ ! -d "$LOGS_DIR" ]; then
     mkdir "$LOGS_DIR"
@@ -47,8 +47,8 @@ app/console assets:install --env=prod --symlink public_html
 app/console assetic:dump --env=prod --no-debug public_html
 app/console doctrine:migrations:migrate --env=prod
 
-chown -RH www-data:www-data $LOGS_DIR_LINK
-chown -RH www-data:www-data $CACHE_DIR_LINK
+#chown -RH www-data:www-data $LOGS_DIR_LINK
+#chown -RH www-data:www-data $CACHE_DIR_LINK
 
 ln -sfn "$TARGET_DIR" "$DIR/current"
 

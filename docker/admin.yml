@@ -1,14 +1,27 @@
 mysql-abstract:
     image: mysql
-    external_links:
-        - db
-    command: bash -c "mysql -h$DB_PORT_3306_TCP_ADDR -P$DB_PORT_3306_TCP_PORT -uroot -p$DB_ENV_MYSQL_ROOT_PASSWORD"
 
 mysql-shell:
-    extens: mysql-abstract
+    extends:
+        service: mysql-abstract
+    external_links:
+        - docker_db_1
+    command: bash -c "mysql -h$$DOCKER_DB_1_PORT_3306_TCP_ADDR -P$$DOCKER_DB_1_PORT_3306_TCP_PORT -uroot -p$$DOCKER_DB_1_ENV_MYSQL_ROOT_PASSWORD"
 
 mysql-dump:
-    extends: mysql-abstract
+    extends:
+        service: mysql-abstract
     volumes:
         - ./:/var/data
-    command: bash -c "mysqldump -h$DB_PORT_3306_TCP_ADDR -P$DB_PORT_3306_TCP_PORT -uroot -p$DB_ENV_MYSQL_ROOT_PASSWORD > /var/data/dump.sql"
+    external_links:
+        - docker_db_1
+    command: bash -c "mysqldump -h$$DOCKER_DB_1_PORT_3306_TCP_ADDR -P$$DOCKER_DB_1_PORT_3306_TCP_PORT -uroot -p$$DOCKER_DB_1_ENV_MYSQL_ROOT_PASSWORD > /var/data/dump.sql"
+
+init:
+    build: php
+    external_links:
+        - docker_db_1
+    volumes:
+        - ./data:/var/data
+    working_dir: /var/data
+    command: bash init.sh
