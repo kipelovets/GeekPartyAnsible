@@ -5,3 +5,4 @@ docker/data/code
 docker/data/parameters.yml
 docker/vars.env
 docker/data/composer-cache
+docker/data/logs
