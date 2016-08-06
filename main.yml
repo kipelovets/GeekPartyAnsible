@@ -1,6 +1,6 @@
 #!/usr/bin/env ansible-playbook
 ---
-- hosts: all
+- hosts: gamedevparty
   gather_facts: no
   roles: 
     - role: mysql
@@ -47,3 +47,25 @@
 
     - role: gohub
       tags: [ gohub ]
+
+- hosts: gamejamjar
+  gather_facts: no
+  tags: [ gamejamjar ]
+  roles:
+    - role: mysql
+      tags: [ mysql ]
+    - role: nginx
+      tags: [ nginx ]
+    - role: php
+      tags: [ php ]
+    - role: site
+      code_dir: /var/www/gamejamjar
+      branch: master
+      mysql_db: gamejamjar
+      domain: gamejamjar.ru
+      fb_app_id: "{{ gamejamjar_fb_app_id }}"
+      fb_secret: "{{ gamejamjar_fb_secret }}"
+      admin_email: "{{ gamejamjar_admin_email }}"
+      vk_app_id: "{{ gamejamjar_vk_app_id }}"
+      vk_app_secret: "{{ gamejamjar_vk_app_secret }}"
+      tags: [ site, gamedevparty ]

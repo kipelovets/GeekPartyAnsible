@@ -42,7 +42,7 @@ export HOME=/root
 app/console cache:warmup --env=prod
 app/console assets:install --env=prod --symlink public_html
 app/console assetic:dump --env=prod --no-debug public_html
-app/console doctrine:migrations:migrate --env=prod
+app/console doctrine:migrations:migrate --env=prod -n
 
 chown -RH www-data:www-data $LOGS_DIR_LINK
 chown -RH www-data:www-data $CACHE_DIR_LINK

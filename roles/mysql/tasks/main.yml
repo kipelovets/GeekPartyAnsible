@@ -28,9 +28,11 @@
 - name: ensure mysql started
   service: name=mysql state=started
 
+- name: ensure mysql user exists
+  mysql_user: name={{ mysql_db_name }} password={{ mysql_db_password }} state=present login_user=root login_password={{ mysql_root_password }} priv=*.*:ALL
+
 - name: ensure mysql DB exists
-  mysql_db: name={{item}} state=present login_user={{ mysql_db_user }} login_password={{ mysql_db_password }}
-  with_items: [ geekparty, geekpartysu ]
+  mysql_db: name={{ mysql_db_name }} state=present login_user=root login_password={{ mysql_root_password }}
 
   # backup
 - name: make backups dir writeable
