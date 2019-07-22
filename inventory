@@ -1,0 +1,14 @@
+[gamejamjar]
+139.59.142.173 ansible_user=root 
+
+[gamejamjar:vars]
+gamejamjar_fb_app_id = 1409582552676586
+gamejamjar_fb_secret = 0d003b0bd240442dcf28237eedf54773
+gamejamjar_admin_email = kipelovets@mail.ru
+gamejamjar_vk_app_id = 5577202
+gamejamjar_vk_app_secret = Q6Bj0DROesw4BG1yDuUX
+mysql_root_password = EiyXmsqw3XACr7
+mysql_db_user = gamejamjar 
+mysql_db_password = PCr4uJMBbyH3mT
+mysql_db_name = gamejamjar
+backup_dir = /var/backups

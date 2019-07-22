@@ -53,8 +53,6 @@ gohub:
 
 templater:
     image: busybox
-    links:
-        - db
     volumes:
         - ./data:/var/data
     command: sh /var/data/tpl.sh
